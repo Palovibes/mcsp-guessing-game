@@ -16,7 +16,7 @@ function guessOnce() {
   let userGuess;
   let guessToInt;
   //Record the number of times the user has guessed correctly
-  let numberOfGuesses = 0;
+  let guesses = [];
   
   do {
     userGuess = prompt('Guess a number between 1 and 10');
@@ -36,19 +36,19 @@ function guessOnce() {
   while (guessToInt !== randomNumber) {
     if (guessToInt < randomNumber) {
       userGuess = prompt('Guess higher!');
-      // Increase the number of correct guesses by 1
-      numberOfGuesses++;
+      // add this guess to the array of guesses by pushing the guess to the array
+      guesses.push(guessToInt);
     } else if (guessToInt > randomNumber) {
       userGuess = prompt('Guess lower!');
-      // Increase the number of correct guesses by 1
-      numberOfGuesses++;
+      // add this guess to the array of guesses by pushing the guess to the array
+      guesses.push(guessToInt);
     }
 
     // Check if user clicked 'Cancel' in subsequent prompts
     if (userGuess === null) {
       alert('Gave up already?');
-      console.log(`Number of guesses: ${numberOfGuesses}`);
-      numberOfGuesses = 0;
+      console.log(`previous guesses: ${guesses.join(',')}`);
+      guesses = [];
       return; // Exit the function
       //reset correctGuesses to 0
     }
@@ -62,8 +62,8 @@ function guessOnce() {
       // Check if user clicked 'Cancel' during re-prompting
       if (userGuess === null) {
         alert('Gave up already?');
-        numberOfGuesses = 0;
-        console.log(`Number of guesses: ${numberOfGuesses}`);
+        guesses = [];
+        console.log(`previous guesses: ${guesses.join(',')}`);
         return; // Exit the function
         //reset correctGuesses to 0
       }
@@ -71,8 +71,10 @@ function guessOnce() {
       guessToInt = parseInt(userGuess);
     }
   }
-
-  alert('Correctomundo! It only took you '+ numberOfGuesses +' attempts to guess the number.');
+  // use join method to convert the array elements into a string, each element separated by a comma  
+  guesses = guesses.join(', ');
+  console.log(`Number of guesses: ${guesses}`);
+  alert('Correctomundo! Your previous guesses were '+ guesses + '!');
 }
 
 // Function to generate a random number between min and max (inclusive)
