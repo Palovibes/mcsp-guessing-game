@@ -5,111 +5,101 @@ console.log('app.js runs');
 let min = 1;
 let max = 10;
 
-
-// Generate a random number between min and max using a helper function
-let randomNumber = getRandomIntInclusive(min, max);
-// Log the random number to the console for debugging purposes
-console.log(`This is the random number" ${randomNumber}`);
-
 // Function to prompt the user to guess a number
 function guessOnce() {
-  //store the user's guess
+  // Generate a random number between min and max using a helper function
+  let randomNumber = getRandomIntInclusive(min, max);
+  // Log the random number to the console for debugging purposes
+  console.log(`This is the random number: ${randomNumber}`);
+
+  // Variable declarations for the user's guess and the guess converted to an integer
   let userGuess;
-  //store the user's guess converted to an integer
   let guessToInt;
-  //keep track of all guesses made
+
+  // Array to keep track of all guesses made
   let guesses = [];
 
-  // Prompt the user for their name and remove any leading/trailing whitespace
-  let userName = prompt('What is your name?').trim();
- //add loop to ask user for name
- while (!userName) {
-  //alert the user if the input is empty
-  alert('Please enter a valid name!');
-  //re-prompt for the name, trimming whitespace
-  userName = prompt('What is your name?').trim();
- }
+  // Prompt the user for their name
+  let userNameInput = prompt('What is your name?');
 
-  //Loop until the user enters a valid number
+  // Check if user clicked 'Cancel' on the name prompt
+  if (userNameInput === null) {
+    alert('Name is required to play the game!');
+    return; // Exit the function if user cancels the game
+  }
+
+  // Trim the user input and re-prompt if it is empty
+  let userName = userNameInput.trim();
+  while (!userName) {
+    alert('Please enter a valid name!');
+    userNameInput = prompt('What is your name?');
+    if (userNameInput === null) {
+      alert('Name is required to play the game!');
+      return; // Exit the function if user cancels again
+    }
+    userName = userNameInput.trim();
+  }
+
+  // Loop until the user enters a valid number
   do {
-    userGuess = prompt(`Hello ${userName }. Guess a number between 1 and 10`);
+    userGuess = prompt(`Hello ${userName}. Guess a number between 1 and 10`);
 
-    // Check if user clicked 'Cancel'
+    // Check if user clicked 'Cancel' on the number guess prompt
     if (userGuess === null) {
       alert('Gave up already?');
-      return; // Exit the function
+      return; // Exit the function if 'Cancel' is clicked
     }
-   //Convert the user's guess to an integer
+
+    // Convert the user's guess to an integer
     guessToInt = parseInt(userGuess);
 
-    //check for a valid number before adding it to the array
-    if (isNaN(guessToInt)) {
+    // Check if the guess is a valid number before adding it to the array
+    if (!isNaN(guessToInt)) {
+      guesses.push(guessToInt);
+    } else {
       alert('Please enter a number');
     }
-    //add the first valid guess to the array
-    guesses.push(guessToInt);
   } while (isNaN(guessToInt));
 
+  // Main guessing loop, continues until the user guesses the correct number
   while (guessToInt !== randomNumber) {
-    if (guessToInt < randomNumber) {
-      userGuess = prompt(`Sorry ${userName}, guess higher!`);
-      // add this guess to the array of guesses by pushing the guess to the array
-      guesses.push(guessToInt);
-    } else if (guessToInt > randomNumber) {
-      userGuess = prompt(`Sorry ${userName}, guess lower!`);
-      // add this guess to the array of guesses by pushing the guess to the array
-      guesses.push(guessToInt);
-    }
+    userGuess = guessToInt < randomNumber ? prompt(`Sorry ${userName}, guess higher!`) : prompt(`Sorry ${userName}, guess lower!`);
 
-    // Check if user clicked 'Cancel' in subsequent prompts
+    // Check if user clicked 'Cancel' during guessing
     if (userGuess === null) {
       alert(`Gave up already ${userName}?`);
-      console.log(`previous guesses: ${guesses.join(', ')}`);
-      return; // Exit the function
+      console.log(`Previous guesses: ${guesses.join(', ')}`);
+      return; // Exit the function if 'Cancel' is clicked
     }
 
     guessToInt = parseInt(userGuess);
 
     // Check again for a valid number in each iteration
-    while (isNaN(guessToInt)) {
-      userGuess = prompt(`${userName} guess a number between 1 and 10`);
-
-      // Check if user clicked 'Cancel' during re-prompting
-      if (userGuess === null) {
-        alert(`Gave up already? ${userName}`);
-        console.log(`previous guesses: ${guesses.join(', ')}`);
-        return; // Exit the function
-      }
-
-      guessToInt = parseInt(userGuess);
-
+    if (!isNaN(guessToInt)) {
+      guesses.push(guessToInt);
     }
   }
 
-  // add the correct guess to the array 
-  guesses.push(guessToInt);
-  // use join method to convert the array elements into a string, each element separated by a comma  
-  guesses = guesses.join(', ');
-  console.log(`Number of guesses: ${guesses}`);
-  alert(`Correctomundo ${userName}! Your previous guesses were ${guesses}!`);
+  // Notify the user of the correct guess and show all previous guesses
+  alert(`Correctomundo ${userName}! Your previous guesses were ${guesses.join(', ')}`);
+
+  // Prompt to ask if the user wants to play again
+  let playAgain = prompt('Would you like to play again? Y/N');
+
+  // Check if the user wants to play again
+  if (playAgain && (playAgain.toLowerCase() === 'y' || playAgain.toLowerCase() === 'yes')) {
+    guessOnce(); // Call the function again to start a new game
+  } else {
+    alert('Thanks for playing!'); // End the game if user chooses not to play again
+  }
 }
 
 // Function to generate a random number between min and max (inclusive)
-function getRandomIntInclusive (min, max) {
-  // Adjust min to be the next largest integer
-  min = Math.ceil(min);
-  // Adjust max to be the next smallest integer
-  max = Math.floor(max);
-  // Generate and return the random number
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min); // Round min up to the nearest whole number
+  max = Math.floor(max); // Round max down to the nearest whole number
+  return Math.floor(Math.random() * (max - min + 1)) + min; // Generate and return the random number
 }
 
 // Execute the guessing game function
 guessOnce();
-
-
-
-
-
-
-
