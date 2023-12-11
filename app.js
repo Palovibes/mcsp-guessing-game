@@ -13,68 +13,85 @@ console.log(`This is the random number" ${randomNumber}`);
 
 // Function to prompt the user to guess a number
 function guessOnce() {
+  //store the user's guess
   let userGuess;
+  //store the user's guess converted to an integer
   let guessToInt;
-  //Record the number of times the user has guessed correctly
+  //keep track of all guesses made
   let guesses = [];
-  
+
+  // Prompt the user for their name and remove any leading/trailing whitespace
+  let userName = prompt('What is your name?').trim();
+ //add loop to ask user for name
+ while (!userName) {
+  //alert the user if the input is empty
+  alert('Please enter a valid name!');
+  //re-prompt for the name, trimming whitespace
+  userName = prompt('What is your name?').trim();
+ }
+
+  //Loop until the user enters a valid number
   do {
-    userGuess = prompt('Guess a number between 1 and 10');
+    userGuess = prompt(`Hello ${userName }. Guess a number between 1 and 10`);
 
     // Check if user clicked 'Cancel'
     if (userGuess === null) {
       alert('Gave up already?');
       return; // Exit the function
     }
-
+   //Convert the user's guess to an integer
     guessToInt = parseInt(userGuess);
+
+    //check for a valid number before adding it to the array
     if (isNaN(guessToInt)) {
       alert('Please enter a number');
     }
+    //add the first valid guess to the array
+    guesses.push(guessToInt);
   } while (isNaN(guessToInt));
 
   while (guessToInt !== randomNumber) {
     if (guessToInt < randomNumber) {
-      userGuess = prompt('Guess higher!');
+      userGuess = prompt(`Sorry ${userName}, guess higher!`);
       // add this guess to the array of guesses by pushing the guess to the array
       guesses.push(guessToInt);
     } else if (guessToInt > randomNumber) {
-      userGuess = prompt('Guess lower!');
+      userGuess = prompt(`Sorry ${userName}, guess lower!`);
       // add this guess to the array of guesses by pushing the guess to the array
       guesses.push(guessToInt);
     }
 
     // Check if user clicked 'Cancel' in subsequent prompts
     if (userGuess === null) {
-      alert('Gave up already?');
-      console.log(`previous guesses: ${guesses.join(',')}`);
-      guesses = [];
+      alert(`Gave up already ${userName}?`);
+      console.log(`previous guesses: ${guesses.join(', ')}`);
       return; // Exit the function
-      //reset correctGuesses to 0
     }
 
     guessToInt = parseInt(userGuess);
 
     // Check again for a valid number in each iteration
     while (isNaN(guessToInt)) {
-      userGuess = prompt('Guess a number between 1 and 10');
+      userGuess = prompt(`${userName} guess a number between 1 and 10`);
 
       // Check if user clicked 'Cancel' during re-prompting
       if (userGuess === null) {
-        alert('Gave up already?');
-        guesses = [];
-        console.log(`previous guesses: ${guesses.join(',')}`);
+        alert(`Gave up already? ${userName}`);
+        console.log(`previous guesses: ${guesses.join(', ')}`);
         return; // Exit the function
-        //reset correctGuesses to 0
       }
 
       guessToInt = parseInt(userGuess);
+
     }
   }
+
+  // add the correct guess to the array 
+  guesses.push(guessToInt);
   // use join method to convert the array elements into a string, each element separated by a comma  
   guesses = guesses.join(', ');
   console.log(`Number of guesses: ${guesses}`);
-  alert('Correctomundo! Your previous guesses were '+ guesses + '!');
+  alert(`Correctomundo ${userName}! Your previous guesses were ${guesses}!`);
 }
 
 // Function to generate a random number between min and max (inclusive)
