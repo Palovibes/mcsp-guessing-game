@@ -32,9 +32,9 @@ function guessOnce() {
 
   while (guessToInt !== randomNumber) {
     if (guessToInt < randomNumber) {
-      userGuess = prompt('Higher!');
+      userGuess = prompt('Guess higher!');
     } else if (guessToInt > randomNumber) {
-      userGuess = prompt('Lower!');
+      userGuess = prompt('Guess lower!');
     }
 
     // Check if user clicked 'Cancel' in subsequent prompts
