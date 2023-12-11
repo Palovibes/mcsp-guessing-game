@@ -62,8 +62,6 @@ function guessOnce() {
   alert('Correctomundo!');
 }
 
-
-
 // Function to generate a random number between min and max (inclusive)
 function getRandomIntInclusive (min, max) {
   // Adjust min to be the next largest integer
