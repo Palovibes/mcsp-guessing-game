@@ -1,7 +1,7 @@
 // Log to indicate the script is running
 console.log('app.js runs');
 
-// Define global variables for minimum and maximum guessing range, and for tracking the first game's guesses
+// Define global variables for minimum and maximum guessing range
 let min = 1;
 let max = 10;
 let firstGameGuesses = 0;
@@ -9,36 +9,42 @@ let previousPlayerName = "";
 
 // Function to generate a random number between min and max (inclusive)
 function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min); // Round min up
-    max = Math.floor(max); // Round max down
-    return Math.floor(Math.random() * (max - min + 1)) + min; // Return the random number
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Function to prompt the user to guess a number
-function guessOnce() {
+function guessOnce(previousPlayerName = "") {
+    let userName;
+    let isNewPlayer = false;
+
+    // If there's a previous player, ask if the current player is the same
+    if (previousPlayerName) {
+        let samePlayer = prompt(`Are you the same player as before (${previousPlayerName})? Y/N`).toLowerCase();
+        if (samePlayer === 'y' || samePlayer === 'yes') {
+            alert(`Welcome back, ${previousPlayerName}! Let's start a new game.`);
+            userName = previousPlayerName;
+        } else {
+            isNewPlayer = true;
+        }
+    }
+
+    // Prompt for new player's name if it's a new player or if there's no previous player
+    if (!previousPlayerName || isNewPlayer) {
+        userName = prompt('What is your name?').trim();
+        while (!userName) {
+            alert('Please enter a valid name!');
+            userName = prompt('What is your name?').trim();
+        }
+    }
+
     let randomNumber = getRandomIntInclusive(min, max); // Generate the random number for this game
     console.log(`This is the random number: ${randomNumber}`);
 
     let userGuess; // To store the user's guess
     let guessToInt; // To store the user's guess converted to an integer
     let guesses = []; // To track all guesses made in this game
-
-    let userNameInput = prompt('What is your name?'); // Prompt user for their name
-    if (userNameInput === null) { // Check if user clicked 'Cancel' on the name prompt
-        alert('Name is required to play the game!');
-        return; // Exit the function if user cancels
-    }
-
-    let userName = userNameInput.trim(); // Trim the user input
-    while (!userName) { // Check if the input is empty and re-prompt
-        alert('Please enter a valid name!');
-        userNameInput = prompt('What is your name?');
-        if (userNameInput === null) {
-            alert('Name is required to play the game!');
-            return; // Exit the function if user cancels again
-        }
-        userName = userNameInput.trim();
-    }
 
     do { // Loop to get a valid number guess from the user
         userGuess = prompt(`Hello ${userName}. Guess a number between 1 and 10`);
@@ -72,7 +78,7 @@ function guessOnce() {
     // Compare the current game's performance to the previous game
     if (userName === previousPlayerName && firstGameGuesses !== 0) {
         if (guesses.length < firstGameGuesses) {
-            alert(`Wowser ${userName}! You guessed it in fewer attempts than last time.`);
+            alert(`${userName}, you guessed it in fewer attempts than last time.`);
         } else if (guesses.length > firstGameGuesses) {
             alert(`${userName}, you guessed it in more attempts than last time.`);
         } else {
@@ -88,13 +94,15 @@ function guessOnce() {
     previousPlayerName = userName;
     firstGameGuesses = guesses.length;
 
-        // Ask if the user wants to play again
-        let playAgain = prompt('Would you like to play again? Y/N');
-        if (playAgain && (playAgain.toLowerCase() === 'y' || playAgain.toLowerCase() === 'yes')) {
-            guessOnce(); // Call the function again to start a new game
-        } else {
-            alert('Please come again!'); // End the game if user chooses not to play again
-        }
-    }    
-// Execute the guessing game function
+    // At the end of the game, ask if they want to play again
+    let playAgain = prompt('Would you like to play again? Y/N');
+    if (playAgain.toLowerCase() === 'y' || playAgain.toLowerCase() === 'yes') {
+        guessOnce(userName); // Pass the current player's name to the next game if they want to play again
+    } else {
+        alert('Hasta la vista, BABY!!'); // End the game with a farewell message
+    }
+}
+
+// Start the first game with no previous player name
 guessOnce();
+   
